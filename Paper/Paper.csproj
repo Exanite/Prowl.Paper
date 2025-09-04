@@ -31,7 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Prowl.Quill" Version="0.6.6" />
+    <ProjectReference Include="..\..\Prowl.Quill\Quill\Quill.csproj"/>
   </ItemGroup>
 
 </Project>
