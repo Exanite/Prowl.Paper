@@ -43,6 +43,11 @@ namespace Prowl.PaperUI
         public Canvas Canvas => _canvas;
 
         /// <summary>
+        /// The scaling factor applied to Points units.
+        /// </summary>
+        public double PointScale { get; set; } = 1;
+
+        /// <summary>
         /// Gets the current parent element in the element hierarchy.
         /// </summary>
         public ElementHandle CurrentParent => _elementStack.Peek();
@@ -141,7 +146,7 @@ namespace Prowl.PaperUI
 
             // Layout phase
             OnEndOfFramePreLayout?.Invoke();
-            ElementLayout.Layout(_rootElementHandle, this);
+            ElementLayout.Layout(_rootElementHandle, this, PointScale);
             OnEndOfFramePostLayout?.Invoke();
 
             // Post-layout callbacks

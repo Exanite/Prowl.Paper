@@ -8,9 +8,6 @@ namespace Prowl.PaperUI.LayoutEngine
     /// </summary>
     public struct UnitValue
     {
-        // TODO: Temporary property
-        public static double PointSize { get; set; } = 1;
-
         /// <summary>
         /// Helper class for interpolation between two UnitValue instances.
         /// Using a simplified class approach to avoid struct cycles.
@@ -117,21 +114,22 @@ namespace Prowl.PaperUI.LayoutEngine
         /// </summary>
         /// <param name="parentValue">The parent element's size in pixels</param>
         /// <param name="defaultValue">Default value to use for Auto and Stretch units</param>
+        /// <param name="pointScale">The scaling factor applied to Points units.</param>
         /// <returns>Size in pixels</returns>
-        public readonly double ToPx(double parentValue, double defaultValue)
+        public readonly double ToPx(double parentValue, double defaultValue, double pointScale)
         {
             // Handle interpolation if active
             if (_lerpData != null)
             {
-                var startPx = _lerpData.Start.ToPx(parentValue, defaultValue);
-                var endPx = _lerpData.End.ToPx(parentValue, defaultValue);
+                var startPx = _lerpData.Start.ToPx(parentValue, defaultValue, pointScale);
+                var endPx = _lerpData.End.ToPx(parentValue, defaultValue, pointScale);
                 return startPx + (endPx - startPx) * _lerpData.Progress;
             }
 
             // Convert based on unit type
             return Type switch {
                 Units.Pixels => Value,
-                Units.Points => Value * PointSize,
+                Units.Points => Value * pointScale,
                 Units.Percentage => ((Value / 100f) * parentValue) + PercentPixelOffset,
                 _ => defaultValue
             };
@@ -144,12 +142,13 @@ namespace Prowl.PaperUI.LayoutEngine
         /// <param name="defaultValue">Default value to use for Auto and Stretch units</param>
         /// <param name="min">Minimum allowed value</param>
         /// <param name="max">Maximum allowed value</param>
+        /// <param name="pointScale">The scaling factor applied to Points units.</param>
         /// <returns>Size in pixels, clamped between min and max</returns>
-        public readonly double ToPxClamped(double parentValue, double defaultValue, in UnitValue min, in UnitValue max)
+        public readonly double ToPxClamped(double parentValue, double defaultValue, in UnitValue min, in UnitValue max, double pointScale)
         {
-            double minValue = min.ToPx(parentValue, double.MinValue);
-            double maxValue = max.ToPx(parentValue, double.MaxValue);
-            double value = ToPx(parentValue, defaultValue);
+            double minValue = min.ToPx(parentValue, double.MinValue, pointScale);
+            double maxValue = max.ToPx(parentValue, double.MaxValue, pointScale);
+            double value = ToPx(parentValue, defaultValue, pointScale);
 
             return Math.Min(maxValue, Math.Max(minValue, value));
         }
