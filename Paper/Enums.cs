@@ -40,9 +40,16 @@ namespace Prowl.PaperUI
     public enum Units
     {
         /// <summary>
-        /// Fixed pixel measurements.
+        /// Fixed-sized unit with each pixel corresponding to a physical pixel on the screen.
+        /// Useful for precise element sizing.
         /// </summary>
         Pixels,
+
+        /// <summary>
+        /// Variable-sized unit based on the device's pixel density.
+        /// Useful for automatic element sizing based on the device's pixel density.
+        /// </summary>
+        Points,
 
         /// <summary>
         /// Percentage of parent container's corresponding dimension.

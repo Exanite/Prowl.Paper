@@ -8,6 +8,9 @@ namespace Prowl.PaperUI.LayoutEngine
     /// </summary>
     public struct UnitValue
     {
+        // TODO: Temporary constant
+        public const double PointSize = 1.75;
+
         /// <summary>
         /// Helper class for interpolation between two UnitValue instances.
         /// Using a simplified class approach to avoid struct cycles.
@@ -15,7 +18,7 @@ namespace Prowl.PaperUI.LayoutEngine
         private class LerpData
         {
             public readonly UnitValue Start;
-            public readonly UnitValue End; 
+            public readonly UnitValue End;
             public readonly double Progress;
 
             public LerpData(UnitValue start, UnitValue end, double progress)
@@ -76,6 +79,12 @@ namespace Prowl.PaperUI.LayoutEngine
         public static UnitValue Pixels(double value) => new UnitValue(Units.Pixels, value);
 
         /// <summary>
+        /// Creates a Point unit value.
+        /// </summary>
+        /// <param name="value">Size in points</param>
+        public static UnitValue Points(double value) => new UnitValue(Units.Points, value);
+
+        /// <summary>
         /// Creates a Percentage unit value.
         /// </summary>
         /// <param name="value">Percentage value (0-100)</param>
@@ -94,6 +103,9 @@ namespace Prowl.PaperUI.LayoutEngine
 
         /// <summary>Returns true if this value is using Pixel units</summary>
         public bool IsPixels => Type == Units.Pixels;
+
+        /// <summary>Returns true if this value is using Points units</summary>
+        public bool IsPoints => Type == Units.Points;
 
         /// <summary>Returns true if this value is using Percentage units</summary>
         public bool IsPercentage => Type == Units.Percentage;
@@ -119,6 +131,7 @@ namespace Prowl.PaperUI.LayoutEngine
             // Convert based on unit type
             return Type switch {
                 Units.Pixels => Value,
+                Units.Points => Value * PointSize,
                 Units.Percentage => ((Value / 100f) * parentValue) + PercentPixelOffset,
                 _ => defaultValue
             };
@@ -248,6 +261,7 @@ namespace Prowl.PaperUI.LayoutEngine
         /// </summary>
         public override readonly string ToString() => Type switch {
             Units.Pixels => $"{Value}px",
+            Units.Points => $"{Value}pt",
             Units.Percentage => $"{Value}% + {PercentPixelOffset}px",
             Units.Stretch => $"Stretch({Value})",
             Units.Auto => "Auto",
