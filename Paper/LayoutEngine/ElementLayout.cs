@@ -147,7 +147,7 @@ namespace Prowl.PaperUI.LayoutEngine
             double computedMain = 0;
             if (main.IsStretch)
                 computedMain = parentMain;
-            else if (main.IsPixels || main.IsPercentage)
+            else if (main.IsPixels || main.IsPoints || main.IsPercentage)
                 computedMain = main.ToPx(parentMain, 100f);
             // Auto stays at 0
 
@@ -155,7 +155,7 @@ namespace Prowl.PaperUI.LayoutEngine
             double computedCross = 0;
             if(cross.IsStretch)
                 computedCross = parentCross;
-            else if (cross.IsPixels || cross.IsPercentage)
+            else if (cross.IsPixels || cross.IsPoints || cross.IsPercentage)
                 computedCross = cross.ToPx(parentCross, 100f);
             // Auto stays at 0
 
