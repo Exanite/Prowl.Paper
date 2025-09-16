@@ -27,6 +27,7 @@ namespace Prowl.PaperUI
         private ICanvasRenderer _renderer;
         private double _width;
         private double _height;
+        private double _pointUnitScale;
         private Stopwatch _timer = new();
 
         // Events
@@ -41,11 +42,6 @@ namespace Prowl.PaperUI
         public Rect ScreenRect => new Rect(0, 0, _width, _height);
         public ElementHandle RootElement => _rootElementHandle;
         public Canvas Canvas => _canvas;
-
-        /// <summary>
-        /// The scaling factor applied to Points units.
-        /// </summary>
-        public double PointScale { get; set; } = 1;
 
         /// <summary>
         /// Gets the current parent element in the element hierarchy.
@@ -97,6 +93,14 @@ namespace Prowl.PaperUI
             _height = height;
         }
 
+        /// <summary>
+        /// Sets the scaling factor applied to Points units.
+        /// </summary>
+        public void SetPointUnitScale(double pointUnitScale)
+        {
+            _pointUnitScale = pointUnitScale;
+        }
+
         public void AddFallbackFont(FontFile font) => _canvas.AddFallbackFont(font);
 
         public IEnumerable<FontFile> EnumerateSystemFonts() => _canvas.EnumerateSystemFonts();
@@ -146,7 +150,7 @@ namespace Prowl.PaperUI
 
             // Layout phase
             OnEndOfFramePreLayout?.Invoke();
-            ElementLayout.Layout(_rootElementHandle, this, PointScale);
+            ElementLayout.Layout(_rootElementHandle, this, _pointUnitScale);
             OnEndOfFramePostLayout?.Invoke();
 
             // Post-layout callbacks

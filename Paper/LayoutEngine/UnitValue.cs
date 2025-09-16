@@ -114,22 +114,22 @@ namespace Prowl.PaperUI.LayoutEngine
         /// </summary>
         /// <param name="parentValue">The parent element's size in pixels</param>
         /// <param name="defaultValue">Default value to use for Auto and Stretch units</param>
-        /// <param name="pointScale">The scaling factor applied to Points units.</param>
+        /// <param name="pointUnitScale">The scaling factor applied to Points units.</param>
         /// <returns>Size in pixels</returns>
-        public readonly double ToPx(double parentValue, double defaultValue, double pointScale)
+        public readonly double ToPx(double parentValue, double defaultValue, double pointUnitScale)
         {
             // Handle interpolation if active
             if (_lerpData != null)
             {
-                var startPx = _lerpData.Start.ToPx(parentValue, defaultValue, pointScale);
-                var endPx = _lerpData.End.ToPx(parentValue, defaultValue, pointScale);
+                var startPx = _lerpData.Start.ToPx(parentValue, defaultValue, pointUnitScale);
+                var endPx = _lerpData.End.ToPx(parentValue, defaultValue, pointUnitScale);
                 return startPx + (endPx - startPx) * _lerpData.Progress;
             }
 
             // Convert based on unit type
             return Type switch {
                 Units.Pixels => Value,
-                Units.Points => Value * pointScale,
+                Units.Points => Value * pointUnitScale,
                 Units.Percentage => ((Value / 100f) * parentValue) + PercentPixelOffset,
                 _ => defaultValue
             };
@@ -142,13 +142,13 @@ namespace Prowl.PaperUI.LayoutEngine
         /// <param name="defaultValue">Default value to use for Auto and Stretch units</param>
         /// <param name="min">Minimum allowed value</param>
         /// <param name="max">Maximum allowed value</param>
-        /// <param name="pointScale">The scaling factor applied to Points units.</param>
+        /// <param name="pointUnitScale">The scaling factor applied to Points units.</param>
         /// <returns>Size in pixels, clamped between min and max</returns>
-        public readonly double ToPxClamped(double parentValue, double defaultValue, in UnitValue min, in UnitValue max, double pointScale)
+        public readonly double ToPxClamped(double parentValue, double defaultValue, in UnitValue min, in UnitValue max, double pointUnitScale)
         {
-            double minValue = min.ToPx(parentValue, double.MinValue, pointScale);
-            double maxValue = max.ToPx(parentValue, double.MaxValue, pointScale);
-            double value = ToPx(parentValue, defaultValue, pointScale);
+            double minValue = min.ToPx(parentValue, double.MinValue, pointUnitScale);
+            double maxValue = max.ToPx(parentValue, double.MaxValue, pointUnitScale);
+            double value = ToPx(parentValue, defaultValue, pointUnitScale);
 
             return Math.Min(maxValue, Math.Max(minValue, value));
         }
