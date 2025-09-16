@@ -8,8 +8,8 @@ namespace Prowl.PaperUI.LayoutEngine
     /// </summary>
     public struct UnitValue
     {
-        // TODO: Temporary constant
-        public const double PointSize = 1.75;
+        // TODO: Temporary property
+        public static double PointSize { get; set; } = 1;
 
         /// <summary>
         /// Helper class for interpolation between two UnitValue instances.
@@ -205,7 +205,7 @@ namespace Prowl.PaperUI.LayoutEngine
         /// </summary>
         public static implicit operator UnitValue(int value)
         {
-            return new UnitValue(Units.Pixels, value);
+            return new UnitValue(Units.Points, value);
         }
 
         /// <summary>
@@ -213,7 +213,7 @@ namespace Prowl.PaperUI.LayoutEngine
         /// </summary>
         public static implicit operator UnitValue(double value)
         {
-            return new UnitValue(Units.Pixels, value);
+            return new UnitValue(Units.Points, value);
         }
 
         #endregion
