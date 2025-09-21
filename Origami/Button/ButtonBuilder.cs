@@ -244,7 +244,7 @@ public class ButtonBuilder
         var theme = Origami.Theme;
 
         // Create the button element
-        var button = _paper.Box($"origami-btn-{_stringId}", _intId, _lineId)
+        var button = _paper.Box(_stringId, _intId, _lineId)
             .LayoutType(LayoutType.Row)
             .Transition(GuiProp.BackgroundColor, 0.2)
             .Transition(GuiProp.ScaleX, 0.1)
