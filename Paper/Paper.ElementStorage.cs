@@ -18,7 +18,7 @@ namespace Prowl.PaperUI
             return ref _elements[index];
         }
 
-        public ElementHandle CreateElement(ulong id)
+        public ElementHandle CreateElement(int id)
         {
             int index;
             ElementData elementData = ElementData.Create(id);
@@ -97,7 +97,7 @@ namespace Prowl.PaperUI
         }
 
         // Helper method to find element by ID
-        public ElementHandle FindElementHandleByID(ulong id)
+        public ElementHandle FindElementHandleByID(int id)
         {
             for (int i = 0; i < _elementCount; i++)
             {

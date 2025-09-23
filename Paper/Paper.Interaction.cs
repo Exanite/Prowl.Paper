@@ -11,22 +11,22 @@ namespace Prowl.PaperUI
         /// <summary>
         /// Checks if an element is currently hovered.
         /// </summary>
-        public bool IsElementHovered(ulong id) => _elementsInBubblePath.Contains(id) || IsHookedToHoveredParent(id);
+        public bool IsElementHovered(int id) => _elementsInBubblePath.Contains(id) || IsHookedToHoveredParent(id);
 
         /// <summary>
         /// Checks if an element is currently active (pressed).
         /// </summary>
-        public bool IsElementActive(ulong id) => _activeElementId == id || IsHookedToActiveParent(id);
+        public bool IsElementActive(int id) => _activeElementId == id || IsHookedToActiveParent(id);
 
         /// <summary>
         /// Checks if an element has input focus.
         /// </summary>
-        public bool IsElementFocused(ulong id) => _focusedElementId == id || IsHookedToFocusedParent(id);
+        public bool IsElementFocused(int id) => _focusedElementId == id || IsHookedToFocusedParent(id);
 
         /// <summary>
         /// Checks if an element is currently being dragged.
         /// </summary>
-        public bool IsElementDragging(ulong id) =>
+        public bool IsElementDragging(int id) =>
             (_isDragging.TryGetValue(id, out bool isDragging) && isDragging) || IsHookedToDraggingParent(id);
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace Prowl.PaperUI
         /// <summary>
         /// Checks if an element is hooked to its parent's hover state.
         /// </summary>
-        private bool IsHookedToHoveredParent(ulong childId)
+        private bool IsHookedToHoveredParent(int childId)
         {
             ElementHandle childElement = FindElementByID(childId);
             if (!childElement.IsValid) return false;
@@ -73,7 +73,7 @@ namespace Prowl.PaperUI
         /// <summary>
         /// Checks if an element is hooked to its parent's active state.
         /// </summary>
-        private bool IsHookedToActiveParent(ulong childId)
+        private bool IsHookedToActiveParent(int childId)
         {
             ElementHandle childElement = FindElementByID(childId);
             if (!childElement.IsValid) return false;
@@ -90,7 +90,7 @@ namespace Prowl.PaperUI
         /// <summary>
         /// Checks if an element is hooked to its parent's focus state.
         /// </summary>
-        private bool IsHookedToFocusedParent(ulong childId)
+        private bool IsHookedToFocusedParent(int childId)
         {
             ElementHandle childElement = FindElementByID(childId);
             if (!childElement.IsValid) return false;
@@ -107,7 +107,7 @@ namespace Prowl.PaperUI
         /// <summary>
         /// Checks if an element is hooked to its parent's dragging state.
         /// </summary>
-        private bool IsHookedToDraggingParent(ulong childId)
+        private bool IsHookedToDraggingParent(int childId)
         {
             ElementHandle childElement = FindElementByID(childId);
             if (!childElement.IsValid) return false;
@@ -129,20 +129,20 @@ namespace Prowl.PaperUI
         private const float DRAG_THRESHOLD = 5.0f; // pixels
 
         // Element interaction state tracking
-        private ulong _theHoveredElementId = 0;  // The ID of the element directly hovered by the pointer
-        private ulong _activeElementId = 0;      // Currently active (pressed) element
-        private ulong _focusedElementId = 0;     // Element with input focus
+        private int _theHoveredElementId = 0;  // The ID of the element directly hovered by the pointer
+        private int _activeElementId = 0;      // Currently active (pressed) element
+        private int _focusedElementId = 0;     // Element with input focus
 
         // State tracking collections
-        private Dictionary<ulong, bool> _wasHoveredState = new Dictionary<ulong, bool>();
-        private Dictionary<ulong, Vector2> _dragStartPos = new Dictionary<ulong, Vector2>();
-        private HashSet<ulong> _elementsInBubblePath = new HashSet<ulong>();
-        private Dictionary<ulong, bool> _isDragging = new Dictionary<ulong, bool>();
+        private Dictionary<int, bool> _wasHoveredState = new Dictionary<int, bool>();
+        private Dictionary<int, Vector2> _dragStartPos = new Dictionary<int, Vector2>();
+        private HashSet<int> _elementsInBubblePath = new HashSet<int>();
+        private Dictionary<int, bool> _isDragging = new Dictionary<int, bool>();
 
         // Public access to interaction state
-        public ulong HoveredElementId => _theHoveredElementId;
-        public ulong ActiveElementId => _activeElementId;
-        public ulong FocusedElementId => _focusedElementId;
+        public int HoveredElementId => _theHoveredElementId;
+        public int ActiveElementId => _activeElementId;
+        public int FocusedElementId => _focusedElementId;
 
         public bool WantsCapturePointer => _theHoveredElementId != 0 || _activeElementId != 0;
 
@@ -159,7 +159,7 @@ namespace Prowl.PaperUI
         {
             // Reset hover state
             _elementsInBubblePath.Clear();
-            ulong previousHoveredElementId = _theHoveredElementId;
+            int previousHoveredElementId = _theHoveredElementId;
             _theHoveredElementId = 0;
 
             // Find the topmost element under the pointer
@@ -360,10 +360,10 @@ namespace Prowl.PaperUI
         /// <summary>
         /// Handles hover, enter, and leave events.
         /// </summary>
-        private void HandleHoverEvents(ulong previousHoveredElementId)
+        private void HandleHoverEvents(int previousHoveredElementId)
         {
             // Find elements that were previously hovered but are no longer in bubble path
-            var leftElements = new HashSet<ulong>(_wasHoveredState.Keys);
+            var leftElements = new HashSet<int>(_wasHoveredState.Keys);
             leftElements.ExceptWith(_elementsInBubblePath);
 
             // Trigger leave events
@@ -737,7 +737,7 @@ namespace Prowl.PaperUI
         private void HandleTabNavigation()
         {
             // Get all elements with valid tab indices
-            var tabbableElements = new List<(int tabIndex, ulong elementId)>();
+            var tabbableElements = new List<(int tabIndex, int elementId)>();
 
             // Brute force search through all elements
             for (int i = 0; i < _elementCount; i++)
@@ -756,7 +756,7 @@ namespace Prowl.PaperUI
             // Sort by tab index
             tabbableElements.Sort((a, b) => a.tabIndex.CompareTo(b.tabIndex));
 
-            ulong nextElementId;
+            int nextElementId;
 
             if (_focusedElementId == 0)
             {
